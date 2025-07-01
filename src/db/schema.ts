@@ -1,4 +1,12 @@
-import { boolean, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  text,
+  uuid,
+  index,
+  unique,
+  boolean,
+  pgTable,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 export const verification = pgTable("verification", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -12,6 +20,10 @@ export const verification = pgTable("verification", {
     () => /* @__PURE__ */ new Date()
   ),
 });
+
+export const verificationIdentifierIdx = index(
+  "verification_identifier_idx"
+).on(verification.identifier);
 
 export const user = pgTable("user", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -35,27 +47,43 @@ export const session = pgTable("session", {
   userAgent: text("user_agent"),
   token: text("token").notNull().unique(),
   expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+  createdAt: timestamp("created_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
+  updatedAt: timestamp("updated_at")
+    .$defaultFn(() => /* @__PURE__ */ new Date())
+    .notNull(),
   userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });
 
-export const account = pgTable("account", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  scope: text("scope"),
-  idToken: text("id_token"),
-  password: text("password"),
-  accessToken: text("access_token"),
-  refreshToken: text("refresh_token"),
-  accountId: text("account_id").notNull(),
-  providerId: text("provider_id").notNull(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
-  accessTokenExpiresAt: timestamp("access_token_expires_at"),
-  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => user.id, { onDelete: "cascade" }),
-});
+export const sessionTokenIdx = index("session_token_idx").on(session.token);
+
+export const account = pgTable(
+  "account",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    scope: text("scope"),
+    idToken: text("id_token"),
+    password: text("password"),
+    accessToken: text("access_token"),
+    refreshToken: text("refresh_token"),
+    accountId: text("account_id").notNull(),
+    providerId: text("provider_id").notNull(),
+    accessTokenExpiresAt: timestamp("access_token_expires_at"),
+    refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
+    createdAt: timestamp("created_at")
+      .$defaultFn(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    updatedAt: timestamp("updated_at")
+      .$defaultFn(() => /* @__PURE__ */ new Date())
+      .notNull(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+  },
+  (table) => ({
+    userProviderUnique: unique().on(table.userId, table.providerId),
+  })
+);
