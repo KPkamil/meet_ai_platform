@@ -1,7 +1,6 @@
 import {
   text,
   uuid,
-  index,
   unique,
   boolean,
   pgTable,
@@ -20,10 +19,6 @@ export const verification = pgTable("verification", {
     () => /* @__PURE__ */ new Date()
   ),
 });
-
-export const verificationIdentifierIdx = index(
-  "verification_identifier_idx"
-).on(verification.identifier);
 
 export const user = pgTable("user", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -57,8 +52,6 @@ export const session = pgTable("session", {
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 });
-
-export const sessionTokenIdx = index("session_token_idx").on(session.token);
 
 export const account = pgTable(
   "account",
