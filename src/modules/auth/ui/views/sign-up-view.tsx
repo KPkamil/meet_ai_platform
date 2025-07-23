@@ -2,10 +2,12 @@
 
 import { z } from "zod";
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { OctagonAlertIcon } from "lucide-react";
+import { FaGithub, FaGoogle } from "react-icons/fa";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Input } from "@/components/ui/input";
@@ -39,7 +41,6 @@ export const SignUpView = () => {
   const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,6 +57,7 @@ export const SignUpView = () => {
 
     authClient.signUp.email(
       {
+        callbackURL: "/",
         name: data.name,
         email: data.email,
         password: data.password,
@@ -64,6 +66,27 @@ export const SignUpView = () => {
         onSuccess: () => {
           setPending(false);
           router.push("/");
+        },
+        onError: ({ error }) => {
+          setPending(false);
+          setError(error.message);
+        },
+      }
+    );
+  };
+
+  const onSocial = (provider: "google" | "github") => {
+    setError(null);
+    setPending(true);
+
+    authClient.signIn.social(
+      {
+        provider,
+        callbackURL: "/",
+      },
+      {
+        onSuccess: () => {
+          setPending(false);
         },
         onError: ({ error }) => {
           setPending(false);
@@ -178,20 +201,22 @@ export const SignUpView = () => {
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <Button
+                    onClick={() => onSocial("google")}
                     type="button"
                     variant="outline"
                     disabled={pending}
                     className="w-full"
                   >
-                    Google
+                    <FaGoogle />
                   </Button>
                   <Button
+                    onClick={() => onSocial("github")}
                     type="button"
                     variant="outline"
                     disabled={pending}
                     className="w-full"
                   >
-                    Github
+                    <FaGithub />
                   </Button>
                 </div>
                 <div className="text-center text-sm">
@@ -207,7 +232,13 @@ export const SignUpView = () => {
             </form>
           </Form>
           <div className="bg-radial from-green-700 to-green-900 relative hidden md:flex flex-col gap-y-4 items-center justify-center">
-            <img src="/logo.svg" alt="Image" />
+            <Image
+              src="/logo.svg"
+              alt="Image"
+              width={320}
+              height={320}
+              className="ml-[80px]"
+            />
           </div>
         </CardContent>
       </Card>
