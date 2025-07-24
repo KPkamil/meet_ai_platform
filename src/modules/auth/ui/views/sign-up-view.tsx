@@ -206,6 +206,7 @@ export const SignUpView = () => {
                     variant="outline"
                     disabled={pending}
                     className="w-full"
+                    aria-label="Sign up with Google"
                   >
                     <FaGoogle />
                   </Button>
@@ -215,6 +216,7 @@ export const SignUpView = () => {
                     variant="outline"
                     disabled={pending}
                     className="w-full"
+                    aria-label="Sign up with Github"
                   >
                     <FaGithub />
                   </Button>
