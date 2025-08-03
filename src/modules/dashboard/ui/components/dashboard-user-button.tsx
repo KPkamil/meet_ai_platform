@@ -35,7 +35,7 @@ export const DashboardUserButton = () => {
     <DropdownMenu>
       <DropdownMenuTrigger className="animate-in fade-in duration-1000 rounded-lg border border-border/10 p-3 w-full flex items-center justify-between bg-white/5 hover:bg-white/10 overflow-hidden">
         {data.user.image ? (
-          <Avatar className="mr-3">
+          <Avatar className="size-9 mr-3">
             <AvatarImage src={data.user.image} />
           </Avatar>
         ) : (
