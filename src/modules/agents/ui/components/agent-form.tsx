@@ -39,7 +39,7 @@ export const AgentForm = ({ onCancel, onSuccess, initialValues }: Props) => {
         // TODO: Check if error code is "FORBIDDEN", redirect to "/upgrade"
       },
       onSuccess: () => {
-        queryClient.invalidateQueries(trpc.agents.getMany.queryOptions());
+        queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
 
         if (initialValues?.id) {
           queryClient.invalidateQueries(
