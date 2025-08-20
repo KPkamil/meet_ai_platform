@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { useTRPC } from "@/trpc/client";
@@ -16,6 +17,7 @@ export const AgentsView = () => {
   const [filters, setFilters] = useAgentsFilters();
 
   const trpc = useTRPC();
+  const router = useRouter();
   const { data } = useSuspenseQuery(
     trpc.agents.getMany.queryOptions({
       ...filters,
@@ -24,7 +26,11 @@ export const AgentsView = () => {
 
   return (
     <div className="flex-1 pb-4 px-4 md:px-8">
-      <DataTable data={data.items} columns={columns} />
+      <DataTable
+        onRowClick={(row) => router.push(`/agents/${row.id}`)}
+        data={data.items}
+        columns={columns}
+      />
       <DataPagination
         page={filters.page}
         totalPages={data.totalPages}
