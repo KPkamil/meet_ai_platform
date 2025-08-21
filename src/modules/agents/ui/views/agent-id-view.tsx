@@ -58,7 +58,7 @@ export const AgentIdView = ({ agentId }: Props) => {
   );
 };
 
-export const AgentsIdViewLoading = () => {
+export const AgentIdViewLoading = () => {
   return (
     <LoadingState
       title="Loading agent"
@@ -67,7 +67,7 @@ export const AgentsIdViewLoading = () => {
   );
 };
 
-export const AgentsIdViewError = () => {
+export const AgentIdViewError = () => {
   return (
     <ErrorState
       title="Error loading agent"
