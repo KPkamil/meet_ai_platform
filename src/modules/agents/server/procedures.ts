@@ -117,7 +117,11 @@ export const agentsRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const [updatedAgent] = await db
         .update(agents)
-        .set(input)
+        .set({
+          name: input.name,
+          updatedAt: new Date(),
+          instructions: input.instructions,
+        })
         .where(
           and(eq(agents.id, input.id), eq(agents.userId, ctx.auth.user.id))
         )
