@@ -12,3 +12,7 @@ export const agentsInsertSchema = z.object({
     .min(1, { message: "Instructions are required" })
     .max(1000, { message: "Instructions are too long" }),
 });
+
+export const agentsUpdateSchema = agentsInsertSchema.extend({
+  id: z.string().uuid({ message: "ID must be a valid UUID" }),
+});
