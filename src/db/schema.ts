@@ -2,6 +2,7 @@ import {
   text,
   uuid,
   unique,
+  pgEnum,
   boolean,
   pgTable,
   timestamp,
@@ -76,4 +77,31 @@ export const agents = pgTable("agents", {
   userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
+});
+
+export const meetingStatus = pgEnum("meeting_status", [
+  "upcoming",
+  "active",
+  "completed",
+  "processing",
+  "canceled",
+]);
+
+export const meetings = pgTable("meetings", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  summary: text("summary"),
+  name: text("name").notNull(),
+  endedAt: timestamp("ended_at"),
+  startedAt: timestamp("started_at"),
+  recordingUrl: text("recording_url"),
+  transcriptUrl: text("transcript_url"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  status: meetingStatus("status").notNull().default("upcoming"),
+  userId: uuid("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  agentId: uuid("agent_id")
+    .notNull()
+    .references(() => agents.id, { onDelete: "cascade" }),
 });
