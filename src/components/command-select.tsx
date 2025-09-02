@@ -37,6 +37,11 @@ export const CommandSelect = ({
 
   const selectedOption = options.find((option) => option.value === value);
 
+  const handleOpenChange = (value: boolean) => {
+    onSearch?.("");
+    setOpen(value);
+  };
+
   return (
     <>
       <Button
@@ -54,8 +59,8 @@ export const CommandSelect = ({
       </Button>
       <CommandResponsiveDialog
         open={open}
-        onOpenChange={setOpen}
         shouldFilter={!onSearch}
+        onOpenChange={handleOpenChange}
       >
         <CommandInput placeholder="Search..." onValueChange={onSearch} />
         <CommandList>
