@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { useTRPC } from "@/trpc/client";
+import { DEFAULT_PAGE } from "@/constants";
 import { CommandSelect } from "@/components/command-select";
 import { GeneratedAvatar } from "@/components/generated-avatar";
 
@@ -42,7 +43,7 @@ export const AgentIdFilter = () => {
       options={commandOptions}
       onSearch={setAgentSearch}
       value={filters.agentId ?? ""}
-      onSelect={(value) => setFilters({ agentId: value })}
+      onSelect={(value) => setFilters({ agentId: value, page: DEFAULT_PAGE })}
     />
   );
 };

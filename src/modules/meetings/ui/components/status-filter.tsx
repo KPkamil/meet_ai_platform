@@ -6,6 +6,7 @@ import {
   ClockArrowUpIcon,
 } from "lucide-react";
 
+import { DEFAULT_PAGE } from "@/constants";
 import { CommandSelect } from "@/components/command-select";
 
 import { MeetingStatus } from "../../types";
@@ -73,7 +74,9 @@ export const StatusFilter = () => {
       options={options}
       placeholder="Status"
       value={filters.status ?? ""}
-      onSelect={(value) => setFilters({ status: value as MeetingStatus })}
+      onSelect={(value) =>
+        setFilters({ status: value as MeetingStatus, page: DEFAULT_PAGE })
+      }
     />
   );
 };
