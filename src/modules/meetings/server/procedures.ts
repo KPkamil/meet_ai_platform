@@ -12,6 +12,7 @@ import {
   DEFAULT_PAGE_SIZE,
 } from "@/constants";
 
+import { MeetingStatus } from "../types";
 import { meetingsInsertSchema, meetingsUpdateSchema } from "../schemas";
 
 export const meetingsRouter = createTRPCRouter({
@@ -39,8 +40,10 @@ export const meetingsRouter = createTRPCRouter({
   getMany: protectedProcedure
     .input(
       z.object({
-        page: z.number().default(DEFAULT_PAGE),
         search: z.string().nullish(),
+        agentId: z.string().nullish(),
+        page: z.number().default(DEFAULT_PAGE),
+        status: z.nativeEnum(MeetingStatus).nullish(),
         pageSize: z
           .number()
           .min(MIN_PAGE_SIZE)
@@ -49,7 +52,7 @@ export const meetingsRouter = createTRPCRouter({
       })
     )
     .query(async ({ input, ctx }) => {
-      const { page, search, pageSize } = input;
+      const { page, search, pageSize, status, agentId } = input;
 
       const data = await db
         .select({
@@ -64,7 +67,10 @@ export const meetingsRouter = createTRPCRouter({
         .where(
           and(
             eq(meetings.userId, ctx.auth.user.id),
-            search ? ilike(meetings.name, `%${search}%`) : undefined
+            eq(agents.userId, ctx.auth.user.id),
+            search ? ilike(meetings.name, `%${search}%`) : undefined,
+            status ? eq(meetings.status, status) : undefined,
+            agentId ? eq(meetings.agentId, agentId) : undefined
           )
         )
         .orderBy(desc(meetings.createdAt), desc(meetings.id))
@@ -78,7 +84,10 @@ export const meetingsRouter = createTRPCRouter({
         .where(
           and(
             eq(meetings.userId, ctx.auth.user.id),
-            search ? ilike(meetings.name, `%${search}%`) : undefined
+            eq(agents.userId, ctx.auth.user.id),
+            search ? ilike(meetings.name, `%${search}%`) : undefined,
+            status ? eq(meetings.status, status) : undefined,
+            agentId ? eq(meetings.agentId, agentId) : undefined
           )
         );
 
