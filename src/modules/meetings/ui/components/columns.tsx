@@ -57,9 +57,9 @@ export const columns: ColumnDef<MeetingGetMany[number]>[] = [
             </span>
           </div>
           <GeneratedAvatar
-            variant="bottsNeutral"
-            seed={row.original.agent.name}
             className="size-4"
+            variant="botttsNeutral"
+            seed={row.original.agent.name}
           />
           <span className="text-sm text-muted-foreground">
             {row.original.startedAt

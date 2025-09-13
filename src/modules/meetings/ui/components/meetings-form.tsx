@@ -141,7 +141,7 @@ export const MeetingsForm = ({ onCancel, onSuccess, initialValues }: Props) => {
                         <div className="flex items-center gap-x-2">
                           <GeneratedAvatar
                             seed={agent.name}
-                            variant="bottsNeutral"
+                            variant="botttsNeutral"
                             className="border size-6"
                           />
                           <span>{agent.name}</span>
