@@ -1,33 +1,19 @@
-import { createAvatar } from "@dicebear/core";
-import { initials, botttsNeutral } from "@dicebear/collection";
-
 import { cn } from "@/lib/utils";
+import { generateAvatarUri } from "@/lib/avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 type Props = {
   seed: string;
   className?: string;
-  variant: "bottsNeutral" | "initials";
+  variant: "botttsNeutral" | "initials";
 };
 
 export const GeneratedAvatar = ({ seed, variant, className }: Props) => {
-  let avatar;
-
-  if (variant === "bottsNeutral") {
-    avatar = createAvatar(botttsNeutral, {
-      seed,
-    });
-  } else {
-    avatar = createAvatar(initials, {
-      seed,
-      fontSize: 42,
-      fontWeight: 500,
-    });
-  }
+  const avatar = generateAvatarUri({ seed, variant });
 
   return (
     <Avatar className={cn(className)}>
-      <AvatarImage src={avatar.toDataUri()} alt="Avatar" />
+      <AvatarImage src={avatar} alt="Avatar" />
       <AvatarFallback>{seed.charAt(0).toUpperCase()}</AvatarFallback>
     </Avatar>
   );
